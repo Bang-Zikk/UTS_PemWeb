@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pengelolaan Toko Kelontong</title>
+    <style>
+        body { font-family: 'Poppins', sans-serif; background-color: #f8f9fa; text-align: center; }
+        .container { width: 60%; margin: auto; padding: 20px; background: white; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        input, button { margin: 10px 0; padding: 12px; width: 90%; border: 1px solid #ddd; border-radius: 8px; font-size: 16px; }
+        button { background-color: #28a745; color: white; border: none; cursor: pointer; font-weight: bold; transition: 0.3s; }
+        button:hover { background-color: #218838; }
+        h2, h3 { color: #343a40; }
+        .section { background: #f1f1f1; padding: 15px; border-radius: 8px; margin-top: 10px; }
+        #laporan { margin-top: 20px; text-align: left; background: #e9ecef; padding: 15px; border-radius: 8px; font-size: 14px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        th, td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+        th { background-color: #28a745; color: white; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Pengelolaan Toko Kelontong</h2>
+        
+        <div class="section">
+            <h3>Entri Data Produk/Barang</h3>
+            <input type="text" id="namaProduk" placeholder="Nama Produk">
+            <input type="number" id="stokProduk" placeholder="Stok">
+            <button onclick="tambahProduk()">Tambah Produk</button>
+        </div>
+        
+        <div class="section">
+            <h3>Pencarian Produk</h3>
+            <input type="text" id="cariProduk" placeholder="Cari Produk">
+            <button onclick="cariProduk()">Cari</button>
+            <p id="hasilPencarian"></p>
+        </div>
+
+        <div class="section">
+            <h3>Entri Data Pelanggan</h3>
+            <input type="text" id="namaPelanggan" placeholder="Nama Pelanggan">
+            <button onclick="tambahPelanggan()">Tambah Pelanggan</button>
+        </div>
+        
+        <div class="section">
+            <h3>Entri Transaksi Penjualan</h3>
+            <input type="text" id="produkTerjual" placeholder="Nama Produk">
+            <input type="number" id="jumlahTerjual" placeholder="Jumlah">
+            <button onclick="tambahTransaksi()">Tambah Transaksi</button>
+        </div>
+        
+        <h3>Laporan</h3>
+        <button onclick="tampilkanLaporan()">Tampilkan Laporan</button>
+        <button onclick="rekapPenjualan()">Rekap Penjualan</button>
+        <div id="laporan"></div>
+    </div>
+    
+    <script>
+        let produk = [];
+        let pelanggan = [];
+        let transaksi = [];
+
+        function tambahProduk() {
+            let nama = document.getElementById('namaProduk').value;
+            let stok = document.getElementById('stokProduk').value;
+            if (nama && stok) {
+                produk.push({ nama, stok });
+                alert('Produk berhasil ditambahkan!');
+                document.getElementById('namaProduk').value = '';
+                document.getElementById('stokProduk').value = '';
+            } else {
+                alert('Harap isi semua kolom!');
+            }
+        }
+
+        function cariProduk() {
+            let nama = document.getElementById('cariProduk').value.toLowerCase();
+            let hasil = produk.find(p => p.nama.toLowerCase() === nama);
+            document.getElementById('hasilPencarian').innerText = hasil ? `Produk: ${hasil.nama}, Stok: ${hasil.stok}` : 'Produk tidak ditemukan';
+        }
+
+        function tambahPelanggan() {
+            let nama = document.getElementById('namaPelanggan').value;
+            if (nama) {
+                pelanggan.push(nama);
+                alert('Pelanggan berhasil ditambahkan!');
+                document.getElementById('namaPelanggan').value = '';
+            } else {
+                alert('Harap isi nama pelanggan!');
+            }
+        }
+
+        function tambahTransaksi() {
+            let nama = document.getElementById('produkTerjual').value;
+            let jumlah = document.getElementById('jumlahTerjual').value;
+            if (nama && jumlah) {
+                transaksi.push({ nama, jumlah, tanggal: new Date().toISOString().split('T')[0] });
+                alert('Transaksi berhasil ditambahkan!');
+                document.getElementById('produkTerjual').value = '';
+                document.getElementById('jumlahTerjual').value = '';
+            } else {
+                alert('Harap isi semua kolom!');
+            }
+        }
+
+        function tampilkanLaporan() {
+            let laporan = document.getElementById('laporan');
+            let html = '<h4>Data Produk:</h4><table><tr><th>Nama</th><th>Stok</th></tr>';
+            produk.forEach(p => {
+                html += `<tr><td>${p.nama}</td><td>${p.stok}</td></tr>`;
+            });
+            html += '</table>';
+            
+            html += '<h4>Data Pelanggan:</h4><ul>';
+            pelanggan.forEach(p => {
+                html += `<li>${p}</li>`;
+            });
+            html += '</ul>';
+            
+            html += '<h4>Transaksi:</h4><table><tr><th>Produk</th><th>Jumlah</th><th>Tanggal</th></tr>';
+            transaksi.forEach(t => {
+                html += `<tr><td>${t.nama}</td><td>${t.jumlah}</td><td>${t.tanggal}</td></tr>`;
+            });
+            html += '</table>';
+            
+            laporan.innerHTML = html;
+        }
+    </script>
+</body>
+</html>
